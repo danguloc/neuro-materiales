@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actividad: Dos circuitos, un pulmón | Anatomía Toracoabdominal · UPAEP</title>
+<style>
+:root {
+  --upaep-blue:       #003087;
+  --upaep-blue-mid:   #0055B8;
+  --upaep-blue-light: #E8F0FA;
+  --upaep-blue-border:#B8CDF0;
+  --color-ok:         #2D8A4E;
+  --color-ok-bg:      #EAF5EE;
+  --color-ok-text:    #1A5C32;
+  --color-error:      #C0392B;
+  --color-error-bg:   #FDECEA;
+  --color-error-text: #7B241C;
+  --color-warn:       #D4A017;
+  --color-warn-bg:    #FEF9EC;
+  --color-warn-text:  #7D5A0A;
+  --gray-bg:          #F7F7F7;
+  --gray-border:      #DEDEDE;
+  --text-main:        #1A1A2E;
+  --text-muted:       #555555;
+  --white:            #FFFFFF;
+  --radius:           8px;
+  --radius-lg:        12px;
+  --shadow-sm:        0 2px 8px rgba(0,48,135,0.08);
+  --shadow-md:        0 4px 16px rgba(0,48,135,0.12);
+  --font-main: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-main);
+  color: var(--text-main);
+  background: var(--gray-bg);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ── BARRA DE PROGRESO ── */
+#progress-bar-container {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.97);
+  border-bottom: 1px solid var(--gray-border);
+  padding: 6px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+#progress-bar-track {
+  flex: 1; height: 6px; background: var(--gray-border);
+  border-radius: 3px; overflow: hidden;
+}
+#progress-bar { height: 100%; width: 0%; background: var(--upaep-blue); border-radius: 3px; transition: width 0.3s; }
+#progress-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; min-width: 100px; text-align: right; }
+#spacer-top { height: 36px; }
+
+/* ── BOTÓN PROYECTOR ── */
+#projector-btn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 999;
+  background: var(--upaep-blue); color: white;
+  border: none; border-radius: var(--radius);
+  padding: 10px 16px; font-size: 13px; font-weight: 600;
+  cursor: pointer; box-shadow: var(--shadow-md);
+  font-family: var(--font-main);
+}
+
+/* ── HEADER ── */
+.page-header {
+  background: var(--upaep-blue); color: white;
+  padding: 24px 32px 20px;
+  border-radius: 0 0 var(--radius) var(--radius);
+  margin-bottom: 24px;
+}
+.header-top { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.header-institution { display: flex; flex-direction: column; }
+.header-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+.header-program { font-size: 12px; color: rgba(255,255,255,0.8); }
+.header-title { font-size: 24px; font-weight: 700; color: white; line-height: 1.2; margin: 0 0 10px; }
+.header-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: rgba(255,255,255,0.7); }
+.header-meta span::before { content: "·"; margin-right: 6px; opacity: 0.4; }
+.header-meta span:first-child::before { display: none; }
+
+/* ── SIDEBAR ── */
+#sidebar-index {
+  position: fixed; left: 0; top: 50%;
+  transform: translateY(-50%);
+  z-index: 990; max-width: 220px;
+}
+#sidebar-toggle {
+  background: var(--upaep-blue); color: white;
+  border: none; border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 8px 12px; font-size: 12px; cursor: pointer;
+  font-family: var(--font-main); writing-mode: vertical-rl;
+  letter-spacing: 0.5px;
+}
+#sidebar-content {
+  display: none; background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 12px; box-shadow: var(--shadow-md); min-width: 190px;
+}
+
+/* ── CONTENIDO ── */
+.page-content { max-width: 860px; margin: 0 auto; padding: 0 20px 40px; }
+
+.section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.section-num {
+  background: var(--upaep-blue); color: white;
+  font-size: 12px; font-weight: 700;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.section-label h2 {
+  font-size: 18px; font-weight: 700; color: var(--upaep-blue);
+  border-bottom: 2px solid var(--upaep-blue);
+  padding-bottom: 4px; flex: 1; margin: 0;
+}
+section { margin-bottom: 44px; }
+
+/* ── INFO BOXES ── */
+.info-box {
+  border-left: 4px solid var(--upaep-blue);
+  background: var(--upaep-blue-light);
+  border-radius: var(--radius); padding: 14px 18px; margin-bottom: 18px;
+  font-size: 14px; line-height: 1.7;
+}
+.info-box.warn { border-color: var(--color-warn); background: var(--color-warn-bg); }
+.info-box.ok   { border-color: var(--color-ok);   background: var(--color-ok-bg); }
+.info-box.error{ border-color: var(--color-error); background: var(--color-error-bg); }
+.info-box strong { color: var(--upaep-blue); }
+.info-box.warn strong { color: var(--color-warn-text); }
+.info-box.ok strong   { color: var(--color-ok-text); }
+.info-box.error strong{ color: var(--color-error-text); }
+
+/* ── TIMER ── */
+#timer-panel {
+  background: white; border: 2px solid var(--upaep-blue);
+  border-radius: var(--radius-lg); padding: 18px 24px;
+  margin-bottom: 28px; display: flex; align-items: center; gap: 20px;
+  box-shadow: var(--shadow-sm); flex-wrap: wrap;
+}
+#timer-display {
+  font-size: 36px; font-weight: 700; color: var(--upaep-blue);
+  font-variant-numeric: tabular-nums; min-width: 100px;
+}
+#timer-display.warn { color: var(--color-warn); }
+#timer-display.urgent { color: var(--color-error); }
+.timer-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+.timer-controls button {
+  padding: 8px 14px; border: none; border-radius: var(--radius);
+  font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-main);
+}
+#timer-start { background: var(--color-ok); color: white; }
+#timer-pause { background: var(--color-warn); color: white; }
+#timer-reset { background: var(--gray-border); color: var(--text-main); }
+.timer-label { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.timer-label strong { color: var(--upaep-blue); display: block; }
+
+/* ── ROLES GRID ── */
+.roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.role-card {
+  border: 1.5px solid var(--upaep-blue-border);
+  border-radius: var(--radius); background: white;
+  overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.role-head {
+  background: var(--upaep-blue); color: white;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.6px;
+  text-transform: uppercase; padding: 8px 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.role-icon { font-size: 16px; }
+.role-body { padding: 10px 12px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.role-body strong { color: var(--text-main); }
+
+/* ── FASE TABS ── */
+.fase-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+.fase-tab {
+  padding: 8px 16px; border: 2px solid var(--upaep-blue-border);
+  border-radius: 20px; font-size: 13px; font-weight: 600;
+  cursor: pointer; background: white; color: var(--text-muted);
+  font-family: var(--font-main); transition: all 0.2s;
+}
+.fase-tab.active { background: var(--upaep-blue); color: white; border-color: var(--upaep-blue); }
+.fase-panel { display: none; }
+.fase-panel.active { display: block; }
+
+/* ── CASO CLÍNICO ── */
+.caso-selector { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.caso-btn {
+  flex: 1; min-width: 140px; padding: 12px 16px;
+  border: 2px solid var(--upaep-blue-border); border-radius: var(--radius);
+  background: white; color: var(--text-main); font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: var(--font-main); text-align: center;
+  transition: all 0.2s;
+}
+.caso-btn:hover { border-color: var(--upaep-blue); background: var(--upaep-blue-light); }
+.caso-btn.selected { border-color: var(--upaep-blue); background: var(--upaep-blue); color: white; }
+
+.caso-content { display: none; }
+.caso-content.visible { display: block; }
+
+.caso-header {
+  background: var(--upaep-blue); color: white;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 12px 18px; font-size: 15px; font-weight: 700;
+}
+.caso-body {
+  background: white; border: 1.5px solid var(--upaep-blue-border);
+  border-top: none; border-radius: 0 0 var(--radius) var(--radius);
+  padding: 18px; margin-bottom: 16px;
+}
+.caso-body p { font-size: 14px; line-height: 1.75; margin-bottom: 12px; }
+.caso-body p:last-child { margin-bottom: 0; }
+
+.pregunta-num {
+  display: inline-block; background: var(--upaep-blue); color: white;
+  font-size: 11px; font-weight: 700; padding: 2px 8px;
+  border-radius: 10px; margin-bottom: 6px; letter-spacing: 0.4px;
+}
+.pregunta-item {
+  border: 1.5px solid var(--gray-border); border-radius: var(--radius);
+  padding: 14px 16px; margin-bottom: 12px; background: var(--gray-bg);
+}
+.pregunta-item p { font-size: 14px; line-height: 1.7; color: var(--text-main); }
+
+/* ── DIAGRAMA INSTRUCCIONES ── */
+.diagrama-wrap {
+  background: white; border: 1.5px solid var(--upaep-blue-border);
+  border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
+}
+.leyenda-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 14px; }
+.leyenda-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.leyenda-color { width: 24px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+/* ── SVG DIAGRAMA ── */
+.svg-diagram-wrap {
+  background: var(--gray-bg); border: 1px solid var(--gray-border);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 20px; text-align: center;
+}
+
+/* ── CRITERIOS ── */
+.criterio-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+.criterio-table th {
+  background: var(--upaep-blue); color: white;
+  padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.4px;
+}
+.criterio-table td { padding: 10px 12px; border-bottom: 1px solid var(--gray-border); vertical-align: top; }
+.criterio-table tr:nth-child(even) td { background: var(--gray-bg); }
+.criterio-table tr:last-child td { border-bottom: none; }
+
+/* ── ENTREGABLE INDIVIDUAL ── */
+.pregunta-individual {
+  border: 1.5px solid var(--upaep-blue-border);
+  border-radius: var(--radius); background: white;
+  margin-bottom: 20px; overflow: hidden;
+}
+.pi-header {
+  background: var(--upaep-blue-light); padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1.5px solid var(--upaep-blue-border);
+}
+.pi-num {
+  background: var(--upaep-blue); color: white;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+.pi-meta { font-size: 12px; color: var(--text-muted); }
+.pi-meta strong { color: var(--upaep-blue); display: block; font-size: 13px; }
+.pi-body { padding: 14px 16px; }
+.pi-body p { font-size: 14px; line-height: 1.75; margin-bottom: 0; }
+.pi-nota { font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 8px; }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; margin: 14px 0; }
+.checklist li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; padding: 6px 0;
+  border-bottom: 0.5px solid var(--gray-border);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li input[type="checkbox"] { margin-top: 4px; flex-shrink: 0; width: 16px; height: 16px; cursor: pointer; }
+
+/* ── FOOTER ── */
+.page-footer {
+  margin-top: 48px; border-top: 2px solid var(--upaep-blue);
+  padding: 14px 24px; display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 8px;
+  font-size: 12px; color: var(--text-muted); max-width: 860px; margin-left: auto; margin-right: auto;
+}
+.page-footer strong { color: var(--upaep-blue); }
+
+@media (max-width: 600px) {
+  .page-header { padding: 16px; }
+  .header-title { font-size: 18px; }
+  .page-content { padding: 0 12px 32px; }
+  #timer-panel { flex-direction: column; gap: 12px; }
+  #timer-display { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- BARRA DE PROGRESO -->
+<div id="progress-bar-container">
+  <div id="progress-bar-track">
+    <div id="progress-bar"></div>
+  </div>
+  <span id="progress-label">Sección 1 de 6</span>
+</div>
+<div id="spacer-top"></div>
+
+<!-- BOTÓN PROYECTOR -->
+<button id="projector-btn">⊞ Proyector</button>
+
+<!-- SIDEBAR -->
+<div id="sidebar-index">
+  <button id="sidebar-toggle">≡ Índice</button>
+  <div id="sidebar-content"></div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-top">
+    <div class="header-institution">
+      <span class="header-tag">Universidad Popular Autónoma del Estado de Puebla</span>
+      <span class="header-program">Médico Cirujano · Anatomía Toracoabdominal</span>
+    </div>
+  </div>
+  <h1 class="header-title">Actividad colaborativa: Dos circuitos, un pulmón</h1>
+  <div class="header-meta">
+    <span>Cierre de tema: Vascularización pulmonar</span>
+    <span>Equipos de 4–5 integrantes</span>
+    <span>Duración: 60–75 minutos</span>
+    <span>Primavera 2026</span>
+  </div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="page-content">
+
+  <!-- ── SECCIÓN 1: INSTRUCCIONES GENERALES ── -->
+  <section data-index="1" data-title="Instrucciones generales" id="sec-1">
+    <div class="section-label">
+      <div class="section-num">1</div>
+      <h2>Instrucciones generales</h2>
+    </div>
+
+    <div class="info-box">
+      <strong>Propósito de la actividad.</strong> Esta actividad no evalúa la capacidad de recuperar información; evalúa la comprensión de la arquitectura funcional del doble sistema vascular pulmonar. Las preguntas del caso clínico están diseñadas de manera que ninguna búsqueda directa en internet las resuelve: requieren integrar la anatomía de ambas circulaciones, razonar sobre consecuencias de oclusiones selectivas y articular con precisión cuándo y por qué cada circuito falla o compensa.
+    </div>
+
+    <div class="info-box warn">
+      <strong>El docente no estará presente durante la sesión.</strong> Estas instrucciones son el único documento rector. Léanlas completas antes de comenzar cualquier trabajo. Si hay dudas sobre el procedimiento, la respuesta está en esta página.
+    </div>
+
+    <p style="margin-bottom:14px; font-size:14px;">La actividad tiene <strong>cuatro fases secuenciales</strong>. Cada fase tiene un tiempo asignado indicado en el cronómetro de la Sección 2. No inicien la siguiente fase antes de completar la anterior; el orden no es arbitrario: el entregable grupal debe estar terminado antes de que comiencen el entregable individual.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-bottom:20px;">
+      <div style="background:white; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); padding:12px; text-align:center;">
+        <div style="font-size:22px; font-weight:700; color:var(--upaep-blue);">10</div>
+        <div style="font-size:12px; color:var(--text-muted);">min — Fase 1<br>Lectura y asignación de roles</div>
+      </div>
+      <div style="background:white; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); padding:12px; text-align:center;">
+        <div style="font-size:22px; font-weight:700; color:var(--upaep-blue);">35</div>
+        <div style="font-size:12px; color:var(--text-muted);">min — Fase 2<br>Trabajo en equipo</div>
+      </div>
+      <div style="background:white; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); padding:12px; text-align:center;">
+        <div style="font-size:22px; font-weight:700; color:var(--upaep-blue);">15</div>
+        <div style="font-size:12px; color:var(--text-muted);">min — Fase 3<br>Entregable individual</div>
+      </div>
+      <div style="background:white; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); padding:12px; text-align:center;">
+        <div style="font-size:22px; font-weight:700; color:var(--upaep-blue);">5–10</div>
+        <div style="font-size:12px; color:var(--text-muted);">min — Fase 4<br>Entrega y cierre</div>
+      </div>
+    </div>
+
+    <div class="info-box ok">
+      <strong>Recursos permitidos durante toda la actividad:</strong> las diapositivas del curso (Cavidad torácica) y acceso a internet. Sin embargo, el tiempo es limitado y las preguntas exigen razonamiento integrado; el uso eficiente del tiempo dependerá más de la discusión entre integrantes que de la búsqueda externa.
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN 2: CRONÓMETRO ── -->
+  <section data-index="2" data-title="Cronómetro de sesión" id="sec-2">
+    <div class="section-label">
+      <div class="section-num">2</div>
+      <h2>Cronómetro de sesión</h2>
+    </div>
+
+    <p style="font-size:14px; margin-bottom:16px;">Usen este cronómetro para gestionar el tiempo de cada fase. Seleccionen la fase activa antes de iniciar.</p>
+
+    <div id="timer-panel">
+      <div>
+        <div id="timer-display">10:00</div>
+        <div id="timer-fase-label" style="font-size:12px; color:var(--text-muted); margin-top:4px;">Fase 1 — Lectura y roles</div>
+      </div>
+      <div>
+        <div class="timer-controls">
+          <button id="timer-start">▶ Iniciar</button>
+          <button id="timer-pause">⏸ Pausar</button>
+          <button id="timer-reset">↺ Reiniciar</button>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="fase-select-btn" data-mins="10" data-label="Fase 1 — Lectura y roles" style="font-size:12px; padding:5px 10px; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); background:white; cursor:pointer; font-family:var(--font-main);">F1 · 10 min</button>
+          <button class="fase-select-btn" data-mins="35" data-label="Fase 2 — Trabajo en equipo" style="font-size:12px; padding:5px 10px; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); background:white; cursor:pointer; font-family:var(--font-main);">F2 · 35 min</button>
+          <button class="fase-select-btn" data-mins="15" data-label="Fase 3 — Entregable individual" style="font-size:12px; padding:5px 10px; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); background:white; cursor:pointer; font-family:var(--font-main);">F3 · 15 min</button>
+          <button class="fase-select-btn" data-mins="10" data-label="Fase 4 — Entrega y cierre" style="font-size:12px; padding:5px 10px; border:1.5px solid var(--upaep-blue-border); border-radius:var(--radius); background:white; cursor:pointer; font-family:var(--font-main);">F4 · 10 min</button>
+        </div>
+      </div>
+      <div class="timer-label">
+        <strong>⚠ Atención al tiempo</strong>
+        El cronómetro emite una alerta visual cuando quedan 5 minutos y otra al llegar a cero. Asignen a un integrante la responsabilidad de monitorear el tiempo.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN 3: ROLES ── -->
+  <section data-index="3" data-title="Fase 1 — Roles del equipo" id="sec-3">
+    <div class="section-label">
+      <div class="section-num">3</div>
+      <h2>Fase 1 — Roles del equipo (10 min)</h2>
+    </div>
+
+    <div class="info-box">
+      <strong>Instrucción.</strong> Antes de leer el caso clínico, asignen los roles a continuación. Los roles estructuran la discusión; no dividen el trabajo en partes independientes. Todos los integrantes participan en la construcción del diagrama y en las respuestas escritas; los roles definen quién lidera cada función, no quién trabaja en exclusiva.
+    </div>
+
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-head"><span class="role-icon">🗺️</span> Cartógrafo</div>
+        <div class="role-body"><strong>Responsabilidad:</strong> construye el diagrama sobre el papel o en el documento compartido. No toma decisiones de contenido sin consenso del equipo. Si hay desacuerdo sobre qué dibujar, detiene el trazo y cede la palabra al Árbitro.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-head"><span class="role-icon">❓</span> Interrogador</div>
+        <div class="role-body"><strong>Responsabilidad:</strong> plantea en voz alta cada pregunta del caso y registra por escrito los desacuerdos que surjan durante la discusión. Su función es asegurarse de que el equipo responda <em>cada</em> pregunta, no solo las más sencillas.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-head"><span class="role-icon">⚖️</span> Árbitro conceptual</div>
+        <div class="role-body"><strong>Responsabilidad:</strong> cuando el equipo no llega a acuerdo, busca en las diapositivas del curso el argumento que resuelve la discrepancia y lo expone al equipo en no más de dos minutos. Si no lo encuentra, el desacuerdo debe quedar registrado en el entregable.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-head"><span class="role-icon">✍️</span> Redactor</div>
+        <div class="role-body"><strong>Responsabilidad:</strong> escribe las respuestas narrativas del entregable grupal con base en lo que el equipo acuerda. Las respuestas deben ser argumentadas: una lista de estructuras sin explicación causal no es una respuesta válida.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-head"><span class="role-icon">✅</span> Verificador <span style="font-size:10px; opacity:0.8;">(solo equipos de 5)</span></div>
+        <div class="role-body"><strong>Responsabilidad:</strong> al final de la Fase 2, revisa que el diagrama y las respuestas escritas sean consistentes entre sí. Si detecta contradicciones, las señala al equipo antes de entregar.</div>
+      </div>
+    </div>
+
+    <div class="info-box warn">
+      <strong>Registro de integrantes y roles.</strong> Antes de pasar a la Fase 2, anoten en su documento de entregable grupal: nombre completo de cada integrante y el rol que le corresponde. Esto es parte del entregable y será revisado.
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN 4: CASO CLÍNICO + DIAGRAMA ── -->
+  <section data-index="4" data-title="Fase 2 — Caso clínico y diagrama" id="sec-4">
+    <div class="section-label">
+      <div class="section-num">4</div>
+      <h2>Fase 2 — Caso clínico y diagrama grupal (35 min)</h2>
+    </div>
+
+    <div class="info-box">
+      <strong>Instrucción.</strong> Seleccionen el caso asignado a su equipo. El docente habrá indicado antes de salir qué caso corresponde a cada equipo (A o B). Si no lo indicó, el equipo con número de lista menor al 50% del grupo toma el Caso A; el resto toma el Caso B. Lean el caso completo antes de comenzar a responder.
+    </div>
+
+    <div class="caso-selector">
+      <button class="caso-btn" id="btn-caso-a">📋 Caso A — Cirugía torácica</button>
+      <button class="caso-btn" id="btn-caso-b">📋 Caso B — Tromboembolia pulmonar</button>
+    </div>
+
+    <!-- CASO A -->
+    <div class="caso-content" id="caso-a">
+      <div class="caso-header">Caso A — Lobectomía superior derecha con ligadura bronquial</div>
+      <div class="caso-body">
+        <p>Un paciente de 58 años con diagnóstico de carcinoma broncogénico central oclusivo del bronquio lobar superior derecho es llevado a lobectomía superior derecha. Durante la resección, el cirujano liga las arterias bronquiales que irrigan el lóbulo superior derecho como parte del procedimiento estándar. Inmediatamente después de la ligadura arterial bronquial, el tejido bronquial del muñón no presenta signos de isquemia ni necrosis aguda.</p>
+        <p>En el postoperatorio inmediato, la función respiratoria del lóbulo medio y del lóbulo inferior derechos se mantiene sin compromiso significativo.</p>
+      </div>
+
+      <div class="pregunta-item">
+        <span class="pregunta-num">Pregunta 1</span>
+        <p>Explica por qué el tejido bronquial del muñón sobrevive a pesar de la ligadura de las arterias bronquiales. Tu respuesta debe incluir: (a) el origen aórtico de las arterias bronquiales del lóbulo superior derecho y su asimetría respecto al lado izquierdo; (b) la naturaleza de la circulación bronquial como circulación nutricia del tejido pulmonar; y (c) el mecanismo anatómico que provee perfusión residual al tejido bronquial tras la ligadura.</p>
+      </div>
+      <div class="pregunta-item">
+        <span class="pregunta-num">Pregunta 2</span>
+        <p>Si, además de las arterias bronquiales, se ligara también la arteria pulmonar del lóbulo superior derecho, ¿el resultado para el tejido bronquial sería diferente? Argumenta distinguiendo con precisión qué función pierde cada circuito de manera aislada: qué ocurre con la viabilidad del tejido bronquial, qué ocurre con la capacidad de intercambio gaseoso y por qué ambas consecuencias son anatómicamente independientes.</p>
+      </div>
+      <div class="pregunta-item">
+        <span class="pregunta-num">Pregunta 3 — Diagrama</span>
+        <p>En el diagrama grupal (ver instrucciones en Sección 4.2), tracen: (a) el origen de las arterias bronquiales del lóbulo superior derecho desde la aorta torácica, indicando la asimetría con el lado izquierdo; (b) las dos vías posibles de drenaje venoso bronquial de ese lóbulo, señalando cuál termina en el sistema venoso sistémico (vena ácigos) y cuál en la vena pulmonar, con la proporción aproximada de cada una; (c) la arteria pulmonar lobar superior derecha desde el tronco pulmonar. Usen el código de colores indicado en la sección de instrucciones del diagrama.</p>
+      </div>
+    </div>
+
+    <!-- CASO B -->
+    <div class="caso-content" id="caso-b">
+      <div class="caso-header">Caso B — Tromboembolia pulmonar masiva con oclusión arterial derecha</div>
+      <div class="caso-body">
+        <p>Paciente de 67 años que se presenta a urgencias con disnea súbita, hipoxemia severa (SpO₂ 82%) y taquicardia. La angiotomografía computarizada confirma tromboembolia pulmonar masiva con oclusión completa de la arteria pulmonar principal derecha. El pulmón derecho muestra ausencia de perfusión funcional en la gammagrafía de ventilación-perfusión, pero en las primeras seis horas no se detectan zonas de infarto pulmonar en la tomografía.</p>
+        <p>El paciente tiene además antecedente de hipertensión arterial sistémica, pero sin datos de aterosclerosis aórtica significativa.</p>
+      </div>
+
+      <div class="pregunta-item">
+        <span class="pregunta-num">Pregunta 1</span>
+        <p>Explica el mecanismo anatómico que protege al parénquima pulmonar derecho de la necrosis inmediata pese a la oclusión de la arteria pulmonar principal derecha. Tu respuesta debe articular: (a) qué estructura vascular suple la irrigación del tejido pulmonar ante la ausencia de circulación pulmonar funcional; (b) qué función específica aporta esa circulación supletoria y cuál no puede suplir; y (c) por qué el infarto pulmonar en contexto de TEP tiende a ser tardío y parcial, no inmediato y total.</p>
+      </div>
+      <div class="pregunta-item">
+        <span class="pregunta-num">Pregunta 2</span>
+        <p>Modifica el escenario: el mismo paciente tuviera aterosclerosis aórtica severa con compromiso ostial bilateral de las arterias bronquiales. ¿Cómo cambiaría el pronóstico inmediato del parénquima pulmonar derecho ante la oclusión de la arteria pulmonar? Argumenta el razonamiento anatómicamente, sin limitarte a describir el resultado: explica el mecanismo por el cual la aterosclerosis bronquial modifica la capacidad de compensación vascular del pulmón.</p>
+      </div>
+      <div class="pregunta-item">
+        <span class="pregunta-num">Pregunta 3 — Diagrama</span>
+        <p>En el diagrama grupal (ver instrucciones en Sección 4.2), tracen para el pulmón derecho: (a) el origen de las arterias bronquiales desde la aorta torácica, indicando la asimetría con el pulmón izquierdo; (b) la ruta completa de la circulación bronquial desde su origen arterial hasta sus dos destinos venosos posibles, identificando qué porcentaje aproximado corresponde a cada destino y qué consecuencia fisiológica tiene el destino que termina en la vena pulmonar; (c) la arteria pulmonar principal derecha con la marca de oclusión. Usen el código de colores indicado en la sección de instrucciones del diagrama.</p>
+      </div>
+    </div>
+
+    <!-- INSTRUCCIONES DEL DIAGRAMA -->
+    <div style="margin-top:28px;">
+      <div class="section-label" style="margin-bottom:12px;">
+        <div class="section-num" style="background:var(--color-warn); width:24px; height:24px; font-size:11px;">4.2</div>
+        <h2 style="font-size:16px;">Instrucciones del diagrama grupal</h2>
+      </div>
+
+      <div class="diagrama-wrap">
+        <p style="font-size:14px; margin-bottom:14px;">El diagrama debe elaborarse en un documento compartido (Google Docs, Jamboard, papel fotografiado) o en una herramienta de diagramación libre como <strong>Excalidraw</strong> (excalidraw.com, gratuito y sin registro) o un documento de Google Slides. Lo que se entrega es una imagen o captura del diagrama terminado.</p>
+
+        <p style="font-size:14px; margin-bottom:14px;"><strong>Elementos mínimos que debe contener el diagrama:</strong></p>
+
+        <div style="background:var(--gray-bg); border-radius:var(--radius); padding:14px; margin-bottom:14px;">
+
+          <div class="svg-diagram-wrap" style="margin-bottom:0;">
+            <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:700px; display:block; margin:0 auto;">
+              <defs>
+                <marker id="arr-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#003087"/></marker>
+                <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C0392B"/></marker>
+                <marker id="arr-lblue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#0055B8"/></marker>
+                <marker id="arr-dblue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#001A50"/></marker>
+              </defs>
+
+              <!-- Pulmón central -->
+              <rect x="270" y="100" width="160" height="180" rx="10" fill="#E8F0FA" stroke="#003087" stroke-width="2"/>
+              <text x="350" y="145" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#003087" font-weight="700">PULMÓN</text>
+              <text x="350" y="162" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#555">árbol bronquial</text>
+              <text x="350" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#555">alvéolos</text>
+              <text x="350" y="190" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#555">intersticio</text>
+              <text x="350" y="204" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#555">pared bronquial</text>
+              <text x="350" y="218" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#555">pleura visceral</text>
+              <text x="350" y="258" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#888" font-style="italic">Trazar conexiones</text>
+              <text x="350" y="272" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#888" font-style="italic">con colores</text>
+
+              <!-- Corazón derecho -->
+              <rect x="30" y="80" width="120" height="50" rx="8" fill="#B8CDF0" stroke="#003087" stroke-width="1.5"/>
+              <text x="90" y="109" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#003087" font-weight="700">Corazón</text>
+              <text x="90" y="123" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#003087">Derecho</text>
+
+              <!-- Corazón izquierdo -->
+              <rect x="550" y="80" width="120" height="50" rx="8" fill="#B8CDF0" stroke="#003087" stroke-width="1.5"/>
+              <text x="610" y="109" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#003087" font-weight="700">Corazón</text>
+              <text x="610" y="123" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#003087">Izquierdo</text>
+
+              <!-- Aorta torácica -->
+              <rect x="30" y="250" width="120" height="50" rx="8" fill="#FDECEA" stroke="#C0392B" stroke-width="1.5"/>
+              <text x="90" y="278" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#C0392B" font-weight="700">Aorta</text>
+              <text x="90" y="292" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#C0392B">Torácica</text>
+
+              <!-- Ácigos / Cava -->
+              <rect x="550" y="250" width="120" height="50" rx="8" fill="#EAF5EE" stroke="#2D8A4E" stroke-width="1.5"/>
+              <text x="610" y="273" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#2D8A4E" font-weight="700">V. Ácigos /</text>
+              <text x="610" y="287" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#2D8A4E">Cava / sistémico</text>
+
+              <!-- Flechas de referencia (punteadas = "a completar") -->
+              <line x1="150" y1="105" x2="268" y2="170" stroke="#003087" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr-blue)"/>
+              <line x1="432" y1="170" x2="548" y2="105" stroke="#0055B8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr-lblue)"/>
+              <line x1="150" y1="270" x2="268" y2="240" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr-red)"/>
+              <line x1="432" y1="240" x2="548" y2="270" stroke="#2D8A4E" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr-dblue)"/>
+
+              <!-- Etiquetas de flechas -->
+              <text x="195" y="128" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#003087" font-style="italic">A. pulmonar</text>
+              <text x="490" y="128" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#0055B8" font-style="italic">V. pulmonar</text>
+              <text x="195" y="265" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#C0392B" font-style="italic">A. bronquial</text>
+              <text x="495" y="263" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#2D8A4E" font-style="italic">V. bronquial</text>
+
+              <!-- Nota punteada -->
+              <text x="350" y="350" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#aaa" font-style="italic">— Esquema de referencia. Reproducir y completar con los elementos del caso —</text>
+            </svg>
+          </div>
+        </div>
+
+        <p style="font-size:14px; margin-bottom:10px;"><strong>Código de colores obligatorio:</strong></p>
+        <div class="leyenda-grid" style="margin-bottom:14px;">
+          <div class="leyenda-item"><div class="leyenda-color" style="background:#C0392B;"></div> Rojo intenso — arterial sistémica (aorta, bronquial)</div>
+          <div class="leyenda-item"><div class="leyenda-color" style="background:#2D8A4E;"></div> Verde — venosa sistémica (ácigos, cava, braquiocefálica)</div>
+          <div class="leyenda-item"><div class="leyenda-color" style="background:#0055B8;"></div> Azul medio — arterial pulmonar (desoxigenada)</div>
+          <div class="leyenda-item"><div class="leyenda-color" style="background:#E63946;"></div> Rojo claro / rosa — venosa pulmonar (oxigenada)</div>
+          <div class="leyenda-item"><div class="leyenda-color" style="background:#D4A017; border:1px dashed #aaa;"></div> Ámbar — anastomosis broncopulmonares</div>
+        </div>
+
+        <div class="info-box warn" style="margin-bottom:0;">
+          <strong>El diagrama es incompleto si no incluye:</strong> (1) los dos circuitos diferenciados por color; (2) el origen aórtico de las arterias bronquiales con la asimetría derecha-izquierda; (3) las anastomosis broncopulmonares; (4) las dos vías de drenaje venoso bronquial con proporción aproximada (70% / 30%); (5) la indicación de qué consecuencia fisiológica tiene el drenaje bronquial que termina en la vena pulmonar.
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box ok" style="margin-top:16px;">
+      <strong>Entregable grupal — formato de entrega:</strong> Un documento (PDF, imagen o enlace compartido) que contenga: (1) portada con nombre del equipo, integrantes, roles y caso asignado; (2) el diagrama completo con código de colores; (3) las respuestas a las tres preguntas del caso en formato de prosa argumentada. Envíen al correo o plataforma indicados por el docente antes de iniciar la Fase 3.
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN 5: ENTREGABLE INDIVIDUAL ── -->
+  <section data-index="5" data-title="Fase 3 — Entregable individual" id="sec-5">
+    <div class="section-label">
+      <div class="section-num">5</div>
+      <h2>Fase 3 — Entregable individual (15 min)</h2>
+    </div>
+
+    <div class="info-box error">
+      <strong>Condición de trabajo en esta fase:</strong> silencio e independencia total. No se puede consultar el entregable grupal ni coordinarse con compañeros de equipo. Sí se pueden usar las diapositivas del curso y acceso a internet. Cada integrante responde en su propio documento individual.
+    </div>
+
+    <p style="font-size:14px; margin-bottom:18px;">Las tres preguntas siguientes son distintas a las del caso clínico grupal. No pueden responderse correctamente sin haber comprendido la discusión de la Fase 2.</p>
+
+    <div class="pregunta-individual">
+      <div class="pi-header">
+        <div class="pi-num">1</div>
+        <div class="pi-meta">
+          <strong>Pregunta 1 — Razonamiento funcional comparativo</strong>
+          <span>Bloom nivel 4–5 · Análisis y evaluación</span>
+        </div>
+      </div>
+      <div class="pi-body">
+        <p>Explica en no más de ocho líneas la diferencia funcional entre la arteria pulmonar y la arteria bronquial. <strong>No uses definiciones:</strong> usa un argumento basado en qué ocurre de manera diferenciada cuando cada una se ocluye de manera aislada, qué función se pierde en cada caso, y por qué esas consecuencias son anatómicamente independientes.</p>
+        <p class="pi-nota">Criterio: la respuesta debe distinguir con precisión circulación funcional vs. nutricia; señalar que la oclusión de la arteria pulmonar compromete el intercambio gaseoso sin necrosis inmediata del tejido; y que la oclusión bronquial compromete la viabilidad tisular sin afectar directamente el intercambio gaseoso.</p>
+      </div>
+    </div>
+
+    <div class="pregunta-individual">
+      <div class="pi-header">
+        <div class="pi-num">2</div>
+        <div class="pi-meta">
+          <strong>Pregunta 2 — Integración anatomo-fisiológica</strong>
+          <span>Bloom nivel 5–6 · Evaluación y síntesis</span>
+        </div>
+      </div>
+      <div class="pi-body">
+        <p>La sangre que drena por las venas bronquiales profundas termina mezclándose con sangre oxigenada en las venas pulmonares antes de llegar al corazón izquierdo. Responde: (a) ¿por qué esto constituye un <em>shunt</em> de derecha a izquierda fisiológico?; (b) ¿qué consecuencia tiene sobre la PaO₂ arterial sistémica?; (c) ¿por qué este <em>shunt</em> es cuantitativamente pequeño en condiciones normales pero podría amplificarse en patología bronquial crónica?</p>
+        <p class="pi-nota">Criterio: esta pregunta es el indicador de comprensión más sensible de la actividad. La respuesta correcta requiere entender que el 70% del retorno venoso bronquial introduce sangre desoxigenada en las venas pulmonares, con lo que la mezcla venosa reduce la PaO₂ del retorno al corazón izquierdo. Una respuesta que solo nombra el shunt sin explicar el mecanismo anatómico no alcanza el nivel requerido.</p>
+      </div>
+    </div>
+
+    <div class="pregunta-individual">
+      <div class="pi-header">
+        <div class="pi-num">3</div>
+        <div class="pi-meta">
+          <strong>Pregunta 3 — Trazado venoso</strong>
+          <span>Bloom nivel 3 · Aplicación</span>
+        </div>
+      </div>
+      <div class="pi-body">
+        <p>Dibuja —sin consultar el diagrama grupal— el trayecto venoso de la circulación bronquial del <strong>pulmón izquierdo</strong>: indica desde qué estructura drena, a través de qué venas transita, a qué estructura(s) llega finalmente, y la proporción aproximada del flujo en cada destino. Si el trayecto se bifurca, muestra ambas ramas con sus proporciones. El dibujo puede ser esquemático; lo que se evalúa es la corrección anatómica, no la calidad gráfica.</p>
+        <p class="pi-nota">Criterio: se espera que el estudiante distinga el drenaje de las venas bronquiales izquierdas superficiales (hacia la vena braquiocefálica izquierda o vena intercostal superior izquierda → sistema sistémico, ≈30%) del drenaje de las venas broncopulmonares profundas (hacia venas pulmonares → corazón izquierdo, ≈70%).</p>
+      </div>
+    </div>
+
+    <div class="info-box ok" style="margin-top:8px;">
+      <strong>Entregable individual — formato de entrega:</strong> Documento con nombre completo, matrícula y equipo al que pertenece. Las preguntas 1 y 2 se responden en prosa. La pregunta 3 se entrega como imagen (fotografía de dibujo en papel o dibujo digital). Mismo correo o plataforma que el entregable grupal.
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN 6: CRITERIOS DE EVALUACIÓN ── -->
+  <section data-index="6" data-title="Criterios de evaluación" id="sec-6">
+    <div class="section-label">
+      <div class="section-num">6</div>
+      <h2>Criterios de evaluación</h2>
+    </div>
+
+    <div class="info-box">
+      Los criterios a continuación son los mismos que usará el docente para evaluar. Revísenlos antes de entregar para verificar que su trabajo los cumple.
+    </div>
+
+    <p style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--upaep-blue);">Entregable grupal (60% de la calificación de la actividad)</p>
+    <table class="criterio-table" style="margin-bottom:28px;">
+      <thead>
+        <tr>
+          <th style="width:30%;">Criterio</th>
+          <th style="width:45%;">Descripción del desempeño esperado</th>
+          <th style="width:25%;">Indicador de insuficiencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Diagrama — diferenciación de circuitos</strong></td>
+          <td>Los dos circuitos (pulmonar y bronquial) son visualmente distinguibles mediante colores y etiquetas. Cada estructura está correctamente conectada a su origen y destino.</td>
+          <td>Los colores no siguen el código indicado o los circuitos se confunden entre sí.</td>
+        </tr>
+        <tr>
+          <td><strong>Diagrama — anastomosis y drenaje venoso</strong></td>
+          <td>Las anastomosis broncopulmonares están representadas. El drenaje venoso bronquial muestra las dos vías con proporción aproximada (70/30) y señala la consecuencia del drenaje que termina en vena pulmonar.</td>
+          <td>Falta una de las dos vías de drenaje o no se indica la consecuencia fisiológica del shunt.</td>
+        </tr>
+        <tr>
+          <td><strong>Respuestas — argumentación causal</strong></td>
+          <td>Las respuestas explican el mecanismo, no solo lo nombran. La cadena causal es explícita: se señala qué estructura compensa, por qué puede hacerlo y en qué condiciones esa compensación falla.</td>
+          <td>Respuestas que listan estructuras sin explicar su relación funcional o causal.</td>
+        </tr>
+        <tr>
+          <td><strong>Respuestas — distinción entre funciones</strong></td>
+          <td>Queda clara la diferencia entre función de intercambio gaseoso (circulación pulmonar) y función nutricia del tejido (circulación bronquial) en cada respuesta donde esto sea relevante.</td>
+          <td>Se confunde qué función corresponde a cada circuito o se trata ambos como equivalentes.</td>
+        </tr>
+        <tr>
+          <td><strong>Registro de roles y participación</strong></td>
+          <td>El documento incluye portada con nombre de cada integrante y su rol. El Verificador (si aplica) firmó la consistencia entre diagrama y respuestas.</td>
+          <td>Falta portada o algún integrante no aparece con rol asignado.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--upaep-blue);">Entregable individual (40% de la calificación de la actividad)</p>
+    <table class="criterio-table">
+      <thead>
+        <tr>
+          <th style="width:30%;">Pregunta</th>
+          <th style="width:45%;">Criterio central</th>
+          <th style="width:25%;">Peso relativo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Pregunta 1</strong> — Diferencia funcional A. pulmonar vs. A. bronquial</td>
+          <td>Distingue con precisión qué función se pierde ante la oclusión de cada arteria y por qué las consecuencias son independientes. No define; argumenta desde la consecuencia clínica.</td>
+          <td>30% del entregable individual</td>
+        </tr>
+        <tr>
+          <td><strong>Pregunta 2</strong> — Shunt broncopulmonar y PaO₂</td>
+          <td>Explica el mecanismo anatómico del shunt (mezcla de sangre desoxigenada en venas pulmonares), su consecuencia sobre la PaO₂ y por qué se amplifica en patología. Es el ítem de mayor discriminación.</td>
+          <td>40% del entregable individual</td>
+        </tr>
+        <tr>
+          <td><strong>Pregunta 3</strong> — Trazado venoso del pulmón izquierdo</td>
+          <td>El diagrama muestra las dos vías de drenaje venoso bronquial izquierdo con sus destinos y proporciones correctas.</td>
+          <td>30% del entregable individual</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box warn" style="margin-top:20px;">
+      <strong>Checklist de cierre — antes de entregar, verifiquen:</strong>
+      <ul class="checklist" style="margin-top:10px;">
+        <li><input type="checkbox"> El diagrama grupal incluye los dos circuitos diferenciados con el código de colores indicado.</li>
+        <li><input type="checkbox"> Las anastomosis broncopulmonares están trazadas con color ámbar.</li>
+        <li><input type="checkbox"> El drenaje venoso bronquial muestra las dos vías con proporciones (≈70% / ≈30%).</li>
+        <li><input type="checkbox"> Las respuestas escritas explican mecanismos causales, no solo nombran estructuras.</li>
+        <li><input type="checkbox"> La portada del entregable grupal incluye todos los nombres con sus roles.</li>
+        <li><input type="checkbox"> El entregable individual tiene nombre completo y matrícula de cada integrante.</li>
+        <li><input type="checkbox"> La Pregunta 3 individual incluye un dibujo o esquema del trazado venoso izquierdo.</li>
+        <li><input type="checkbox"> Ambos entregables (grupal e individual) fueron enviados antes del cierre de la sesión.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <div><strong>Anatomía Toracoabdominal</strong> · Actividad: Vascularización pulmonar · Primavera 2026</div>
+  <div>Daniel Angulo Conde · daniel.angulo@upaep.mx · UPAEP</div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+// ── BARRA DE PROGRESO ──
+(function() {
+  var sections = document.querySelectorAll('section[data-index]');
+  var bar = document.getElementById('progress-bar');
+  var label = document.getElementById('progress-label');
+  var total = sections.length;
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+    bar.style.width = pct + '%';
+    var current = 1;
+    sections.forEach(function(s) {
+      if (s.getBoundingClientRect().top <= 120) current = parseInt(s.getAttribute('data-index'));
+    });
+    label.textContent = 'Sección ' + current + ' de ' + total;
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+
+// ── PROYECTOR ──
+(function() {
+  var btn = document.getElementById('projector-btn');
+  var on = false;
+  btn.addEventListener('click', function() {
+    on = !on;
+    document.body.style.fontSize = on ? '19px' : '';
+    document.body.style.lineHeight = on ? '1.9' : '';
+    btn.textContent = on ? '✕ Normal' : '⊞ Proyector';
+    btn.style.background = on ? '#C0392B' : 'var(--upaep-blue)';
+  });
+})();
+
+// ── SIDEBAR ──
+(function() {
+  var toggle = document.getElementById('sidebar-toggle');
+  var content = document.getElementById('sidebar-content');
+  var sections = document.querySelectorAll('section[data-index]');
+  var html = '<div style="font-size:12px; font-weight:700; color:var(--upaep-blue); margin-bottom:8px;">CONTENIDO</div>';
+  sections.forEach(function(s) {
+    var idx = s.getAttribute('data-index');
+    var title = s.getAttribute('data-title') || 'Sección ' + idx;
+    html += '<a href="#sec-' + idx + '" style="display:block; font-size:12px; color:var(--text-main); padding:4px 0; text-decoration:none; border-bottom:0.5px solid var(--gray-border);">'
+          + idx + '. ' + title + '</a>';
+  });
+  content.innerHTML = html;
+  toggle.addEventListener('click', function() {
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+  });
+})();
+
+// ── CRONÓMETRO ──
+(function() {
+  var totalSecs = 10 * 60;
+  var remaining = totalSecs;
+  var running = false;
+  var interval = null;
+  var display = document.getElementById('timer-display');
+  var faseLabel = document.getElementById('timer-fase-label');
+
+  function fmt(s) {
+    var m = Math.floor(s / 60);
+    var ss = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (ss < 10 ? '0' : '') + ss;
+  }
+
+  function render() {
+    display.textContent = fmt(remaining);
+    if (remaining <= 0) {
+      display.className = 'urgent';
+    } else if (remaining <= 300) {
+      display.className = 'warn';
+    } else {
+      display.className = '';
+    }
+  }
+
+  function tick() {
+    if (remaining > 0) {
+      remaining--;
+      render();
+      if (remaining === 300) {
+        display.className = 'warn';
+      }
+      if (remaining === 0) {
+        clearInterval(interval);
+        running = false;
+        display.className = 'urgent';
+        alert('⏰ Tiempo agotado para esta fase. Pasen a la siguiente fase.');
+      }
+    }
+  }
+
+  document.getElementById('timer-start').addEventListener('click', function() {
+    if (!running && remaining > 0) {
+      running = true;
+      interval = setInterval(tick, 1000);
+    }
+  });
+
+  document.getElementById('timer-pause').addEventListener('click', function() {
+    if (running) {
+      running = false;
+      clearInterval(interval);
+    }
+  });
+
+  document.getElementById('timer-reset').addEventListener('click', function() {
+    running = false;
+    clearInterval(interval);
+    remaining = totalSecs;
+    render();
+  });
+
+  document.querySelectorAll('.fase-select-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      running = false;
+      clearInterval(interval);
+      totalSecs = parseInt(btn.getAttribute('data-mins')) * 60;
+      remaining = totalSecs;
+      faseLabel.textContent = btn.getAttribute('data-label');
+      render();
+      document.querySelectorAll('.fase-select-btn').forEach(function(b) {
+        b.style.background = 'white';
+        b.style.borderColor = 'var(--upaep-blue-border)';
+        b.style.color = 'var(--text-main)';
+      });
+      btn.style.background = 'var(--upaep-blue)';
+      btn.style.borderColor = 'var(--upaep-blue)';
+      btn.style.color = 'white';
+    });
+  });
+
+  render();
+})();
+
+// ── SELECTOR DE CASO ──
+(function() {
+  var btnA = document.getElementById('btn-caso-a');
+  var btnB = document.getElementById('btn-caso-b');
+  var casoA = document.getElementById('caso-a');
+  var casoB = document.getElementById('caso-b');
+
+  btnA.addEventListener('click', function() {
+    casoA.classList.add('visible');
+    casoB.classList.remove('visible');
+    btnA.classList.add('selected');
+    btnB.classList.remove('selected');
+  });
+
+  btnB.addEventListener('click', function() {
+    casoB.classList.add('visible');
+    casoA.classList.remove('visible');
+    btnB.classList.add('selected');
+    btnA.classList.remove('selected');
+  });
+})();
+</script>
+</body>
+</html>
