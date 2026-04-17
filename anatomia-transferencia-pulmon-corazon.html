@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anatomía – Transferencia: Del pulmón al corazón | UPAEP</title>
+<style>
+:root {
+  --upaep-blue:       #003087;
+  --upaep-blue-mid:   #0055B8;
+  --upaep-blue-light: #E8F0FA;
+  --upaep-blue-border:#B8CDF0;
+  --color-ok:         #2D8A4E;
+  --color-ok-bg:      #EAF5EE;
+  --color-ok-text:    #1A5C32;
+  --color-error:      #C0392B;
+  --color-error-bg:   #FDECEA;
+  --color-error-text: #7B241C;
+  --color-warn:       #D4A017;
+  --color-warn-bg:    #FEF9EC;
+  --color-warn-text:  #7D5A0A;
+  --color-info:       #0055B8;
+  --color-info-bg:    #E8F0FA;
+  --gray-bg:          #F7F7F7;
+  --gray-border:      #DEDEDE;
+  --text-main:        #1A1A2E;
+  --text-muted:       #555555;
+  --white:            #FFFFFF;
+  --radius:           8px;
+  --radius-lg:        12px;
+  --shadow-sm:        0 2px 8px rgba(0,48,135,0.08);
+  --shadow-md:        0 4px 16px rgba(0,48,135,0.12);
+  --font-main: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-main);
+  color: var(--text-main);
+  background: var(--gray-bg);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ── BARRA DE PROGRESO ── */
+#progress-bar-container {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.97);
+  border-bottom: 1px solid var(--gray-border);
+  padding: 6px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+#progress-bar-track {
+  flex: 1; height: 6px; background: var(--gray-border);
+  border-radius: 3px; overflow: hidden;
+}
+#progress-bar {
+  height: 100%; width: 0%; background: var(--upaep-blue);
+  border-radius: 3px; transition: width 0.3s;
+}
+#progress-label {
+  font-size: 12px; color: var(--text-muted);
+  white-space: nowrap; min-width: 100px; text-align: right;
+}
+.progress-spacer { height: 32px; }
+
+/* ── BOTÓN PROYECTOR ── */
+#projector-btn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 999;
+  background: var(--upaep-blue); color: white;
+  border: none; border-radius: var(--radius);
+  padding: 10px 16px; font-size: 13px; font-weight: 600;
+  cursor: pointer; box-shadow: var(--shadow-md);
+  font-family: var(--font-main);
+}
+
+/* ── HEADER ── */
+.page-header {
+  background: var(--upaep-blue);
+  color: white;
+  padding: 24px 32px 20px;
+  border-radius: 0 0 var(--radius) var(--radius);
+  margin-bottom: 24px;
+}
+.header-top {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
+}
+.header-institution { display: flex; flex-direction: column; }
+.header-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: rgba(255,255,255,0.6);
+}
+.header-program { font-size: 12px; color: rgba(255,255,255,0.8); }
+.header-title {
+  font-size: 24px; font-weight: 700; color: white;
+  line-height: 1.2; margin: 0 0 10px;
+}
+.header-meta {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  font-size: 12px; color: rgba(255,255,255,0.7);
+}
+.header-meta span::before { content: "·"; margin-right: 6px; opacity: 0.4; }
+.header-meta span:first-child::before { display: none; }
+
+/* ── ÍNDICE LATERAL ── */
+#sidebar-index {
+  position: fixed; left: 0; top: 50%;
+  transform: translateY(-50%); z-index: 990; max-width: 220px;
+}
+#sidebar-toggle {
+  background: var(--upaep-blue); color: white;
+  border: none; border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 8px 12px; font-size: 12px; cursor: pointer;
+  font-family: var(--font-main); writing-mode: vertical-rl;
+  letter-spacing: 0.5px;
+}
+#sidebar-content {
+  display: none; background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 12px; box-shadow: var(--shadow-md); min-width: 190px;
+}
+
+/* ── CONTENIDO PRINCIPAL ── */
+.page-content {
+  max-width: 860px; margin: 0 auto; padding: 0 24px 48px;
+}
+
+/* ── SECCIONES ── */
+.section-label {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.section-num {
+  background: var(--upaep-blue); color: white;
+  font-size: 12px; font-weight: 700;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.section-label h2 {
+  font-size: 18px; font-weight: 700; color: var(--upaep-blue);
+  border-bottom: 2px solid var(--upaep-blue);
+  padding-bottom: 4px; flex: 1; margin: 0;
+}
+section {
+  background: white; border-radius: var(--radius-lg);
+  padding: 28px 32px; margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── CAJAS INFO ── */
+.info-box {
+  border-left: 4px solid var(--upaep-blue);
+  background: var(--upaep-blue-light);
+  border-radius: var(--radius); padding: 14px 18px;
+  margin-bottom: 20px; font-size: 14px; line-height: 1.7;
+}
+.info-box.warn {
+  border-color: var(--color-warn); background: var(--color-warn-bg);
+}
+.info-box.ok {
+  border-color: var(--color-ok); background: var(--color-ok-bg);
+}
+.info-box strong { color: var(--upaep-blue); }
+.info-box.warn strong { color: var(--color-warn-text); }
+.info-box.ok strong { color: var(--color-ok-text); }
+
+/* ── TEXTO ── */
+p { margin-bottom: 14px; font-size: 15px; line-height: 1.75; }
+p:last-child { margin-bottom: 0; }
+
+/* ── FASES ── */
+.fase-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  padding-bottom: 10px; border-bottom: 1.5px solid var(--upaep-blue-border);
+}
+.fase-badge {
+  background: var(--upaep-blue); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; padding: 5px 12px;
+  border-radius: 20px; white-space: nowrap;
+}
+.fase-header h3 {
+  font-size: 16px; font-weight: 700; color: var(--upaep-blue); margin: 0;
+}
+.fase-tiempo {
+  margin-left: auto; font-size: 12px; color: var(--text-muted);
+  font-weight: 600; white-space: nowrap;
+}
+
+/* ── TABLA DE MODELO ── */
+.modelo-grid {
+  display: grid; grid-template-columns: auto 1fr;
+  gap: 0; border: 1.5px solid var(--upaep-blue-border);
+  border-radius: var(--radius); overflow: hidden; margin: 16px 0;
+}
+.modelo-grid .cat {
+  background: var(--upaep-blue); color: white;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center;
+}
+.modelo-grid .desc {
+  background: white; padding: 10px 16px;
+  font-size: 13px; color: var(--text-muted);
+  border-bottom: 1px solid var(--gray-border);
+  display: flex; align-items: center;
+}
+.modelo-grid .cat:last-of-type,
+.modelo-grid .desc:last-child {
+  border-bottom: none;
+}
+
+/* ── CHECKLIST INTERACTIVO ── */
+.checklist-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 16px; border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius); margin-bottom: 8px;
+  cursor: pointer; transition: all 0.2s; background: white;
+  font-size: 14px; line-height: 1.6;
+}
+.checklist-item:hover { border-color: var(--upaep-blue-mid); background: var(--upaep-blue-light); }
+.checklist-item.checked {
+  border-color: var(--color-ok); background: var(--color-ok-bg);
+  color: var(--color-ok-text);
+}
+.checklist-item.missing {
+  border-color: var(--color-error); background: var(--color-error-bg);
+}
+.check-icon {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--gray-border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; margin-top: 1px;
+  transition: all 0.2s;
+}
+.checked .check-icon {
+  background: var(--color-ok); border-color: var(--color-ok); color: white;
+}
+.missing .check-icon {
+  background: var(--color-error); border-color: var(--color-error); color: white;
+}
+.checklist-label { flex: 1; }
+.checklist-label strong { color: var(--upaep-blue); display: block; margin-bottom: 2px; }
+.checked .checklist-label strong { color: var(--color-ok-text); }
+
+#checklist-status {
+  margin-top: 14px; padding: 10px 14px; border-radius: var(--radius);
+  font-size: 13px; font-weight: 600; display: none;
+}
+
+/* ── VACÍOS ── */
+.vacios-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0;
+}
+.vacio-item {
+  padding: 12px 16px; border-radius: var(--radius);
+  border: 1.5px solid var(--gray-border); background: white;
+  font-size: 13px;
+}
+.vacio-item .cat-name {
+  font-weight: 700; color: var(--upaep-blue); font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px;
+}
+.vacio-toggle {
+  display: flex; gap: 8px; margin-top: 8px;
+}
+.vacio-btn {
+  flex: 1; padding: 6px 8px; border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius); background: var(--gray-bg);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: var(--font-main); transition: all 0.15s;
+}
+.vacio-btn.active-ok {
+  background: var(--color-ok-bg); border-color: var(--color-ok);
+  color: var(--color-ok-text);
+}
+.vacio-btn.active-duda {
+  background: var(--color-warn-bg); border-color: var(--color-warn);
+  color: var(--color-warn-text);
+}
+.vacio-btn.active-no {
+  background: var(--color-error-bg); border-color: var(--color-error);
+  color: var(--color-error-text);
+}
+
+/* ── PRODUCTOS ── */
+.producto-card {
+  border: 1.5px solid var(--upaep-blue-border);
+  border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px;
+}
+.producto-header {
+  background: var(--upaep-blue-light); padding: 12px 18px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--upaep-blue-border);
+}
+.producto-num {
+  background: var(--upaep-blue); color: white;
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 12px; white-space: nowrap;
+}
+.producto-header h4 {
+  font-size: 14px; font-weight: 700; color: var(--upaep-blue); margin: 0;
+}
+.producto-body { padding: 18px 20px; background: white; }
+.producto-body p { font-size: 14px; margin-bottom: 10px; }
+.producto-body p:last-child { margin-bottom: 0; }
+
+/* ── SUBCATEGORÍAS ── */
+.subcats { margin: 12px 0 0; }
+.subcat {
+  padding: 8px 14px; background: var(--gray-bg);
+  border-left: 3px solid var(--upaep-blue-mid);
+  margin-bottom: 6px; border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 13px;
+}
+.subcat strong { color: var(--upaep-blue-mid); }
+
+/* ── ALERTA RESTRICCIÓN ── */
+.restriccion {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--color-warn-bg); border: 1.5px solid var(--color-warn);
+  border-radius: var(--radius); padding: 14px 18px; margin: 14px 0;
+}
+.restriccion-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.restriccion p { margin: 0; font-size: 14px; color: var(--color-warn-text); font-weight: 600; }
+
+/* ── PREGUNTAS META ── */
+.meta-pregunta {
+  border: 1.5px solid var(--upaep-blue-border);
+  border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px;
+  background: white;
+}
+.meta-num {
+  font-size: 11px; font-weight: 700; color: var(--upaep-blue-mid);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+}
+.meta-pregunta p { font-size: 14px; margin: 0; font-weight: 500; }
+
+/* ── CRITERIOS ── */
+.criterio-row {
+  display: grid; grid-template-columns: 1fr 80px;
+  gap: 0; border-bottom: 1px solid var(--gray-border);
+  padding: 12px 0; align-items: start;
+}
+.criterio-row:last-child { border-bottom: none; }
+.criterio-nombre { font-size: 14px; font-weight: 700; color: var(--upaep-blue); margin-bottom: 4px; }
+.criterio-desc { font-size: 13px; color: var(--text-muted); }
+.criterio-pct {
+  font-size: 22px; font-weight: 700; color: var(--upaep-blue);
+  text-align: right; padding-top: 2px;
+}
+.criterio-pct span { font-size: 13px; font-weight: 400; }
+
+/* ── FOOTER ── */
+.page-footer {
+  margin-top: 48px; border-top: 2px solid var(--upaep-blue);
+  padding: 14px 24px; display: flex;
+  justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--text-muted);
+  max-width: 860px; margin-left: auto; margin-right: auto;
+}
+.page-footer strong { color: var(--upaep-blue); }
+
+@media(max-width:640px){
+  .page-content { padding: 0 12px 48px; }
+  section { padding: 20px 18px; }
+  .vacios-grid { grid-template-columns: 1fr; }
+  .modelo-grid { grid-template-columns: 1fr; }
+  .modelo-grid .cat { border-bottom: none; border-right: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- BARRA DE PROGRESO -->
+<div id="progress-bar-container">
+  <div id="progress-bar-track">
+    <div id="progress-bar"></div>
+  </div>
+  <span id="progress-label">Sección 1 de 6</span>
+</div>
+<div class="progress-spacer"></div>
+
+<!-- BOTÓN PROYECTOR -->
+<button id="projector-btn">⊞ Proyector</button>
+
+<!-- ÍNDICE LATERAL -->
+<div id="sidebar-index">
+  <button id="sidebar-toggle">≡ Índice</button>
+  <div id="sidebar-content"></div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-top">
+    <div class="header-institution">
+      <span class="header-tag">Universidad Popular Autónoma del Estado de Puebla</span>
+      <span class="header-program">Licenciatura en Medicina · Anatomía</span>
+    </div>
+  </div>
+  <h1 class="header-title">Transferencia de modelo anatómico: del pulmón al corazón</h1>
+  <div class="header-meta">
+    <span>Actividad integradora</span>
+    <span>Aula: 40 min · Trabajo autónomo: fin de semana · Cierre: 20–30 min</span>
+  </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="page-content" id="main-content">
+
+  <!-- SECCIÓN 1: PROPÓSITO -->
+  <section data-index="1" data-title="Propósito de la actividad" id="sec-1">
+    <div class="section-label">
+      <div class="section-num">1</div>
+      <h2>Propósito de la actividad</h2>
+    </div>
+
+    <div class="info-box">
+      <strong>Lo que se evalúa no es cuánto sabes del corazón, sino si eres capaz de usar el mismo modelo con el que analizaste el pulmón.</strong> Si tu trabajo no sigue ese modelo, se considera incorrecto aunque los datos anatómicos sean correctos.
+    </div>
+
+    <p>Durante las sesiones de pulmón construiste una forma de organizar la anatomía: no una lista de estructuras, sino un sistema de categorías que te permite describir cualquier órgano de manera coherente y completa. El objetivo de esta actividad es que apliques ese mismo sistema al corazón, sin reorganizarlo ni abandonarlo en favor de lo que encuentres en los libros.</p>
+
+    <p>Lo que se pretende es que al terminar esta actividad seas capaz de estudiar un órgano nuevo sin empezar desde cero; que el modelo, y no el contenido, sea lo que transfieras de un tema al siguiente.</p>
+  </section>
+
+  <!-- SECCIÓN 2: FASE EN AULA -->
+  <section data-index="2" data-title="Fase en aula (40 min)" id="sec-2">
+    <div class="section-label">
+      <div class="section-num">2</div>
+      <h2>Fase en aula — 40 minutos</h2>
+    </div>
+
+    <!-- FASE 1 -->
+    <div class="fase-header">
+      <span class="fase-badge">Fase 1</span>
+      <h3>Reconstrucción del modelo</h3>
+      <span class="fase-tiempo">10 min · Equipos de 3</span>
+    </div>
+
+    <p>Sin usar libros ni teléfono, reconstruyan en equipo <em>cómo</em> analizaron el pulmón. No escriban contenido pulmonar; escriban las categorías de análisis que usaron. El producto de esta fase es una lista estructurada de categorías, no de datos.</p>
+
+    <p>Tu docente validará el modelo reconstruido antes de continuar. Si falta una categoría, será señalada en ese momento. Las categorías que deben aparecer son las siguientes:</p>
+
+    <div class="modelo-grid">
+      <div class="cat">Forma / Ejes</div>
+      <div class="desc">Descripción tridimensional, no adjetivos genéricos</div>
+      <div class="cat">Localización / Relaciones</div>
+      <div class="desc">Posición en el cuerpo y estructuras adyacentes</div>
+      <div class="cat">Sistema de recubrimiento</div>
+      <div class="desc">Capas, espacios, función de cada uno</div>
+      <div class="cat">Organización interna</div>
+      <div class="desc">Compartimientos, válvulas, flujo</div>
+      <div class="cat">Vascularización</div>
+      <div class="desc">Distinguir tipo funcional vs. tipo nutritivo</div>
+      <div class="cat">Inervación</div>
+      <div class="desc">Sistema nervioso autónomo y efecto funcional</div>
+      <div class="cat">Integración funcional</div>
+      <div class="desc">Cómo la estructura hace posible la función</div>
+    </div>
+
+    <!-- FASE 2 -->
+    <div class="fase-header" style="margin-top: 28px;">
+      <span class="fase-badge">Fase 2</span>
+      <h3>Aplicación inicial al corazón</h3>
+      <span class="fase-tiempo">15 min · Sin fuentes</span>
+    </div>
+
+    <div class="restriccion">
+      <div class="restriccion-icon">⚠</div>
+      <p>En esta fase no pueden consultar libros, apuntes ni teléfono. Pueden equivocarse en el contenido; no pueden equivocarse en la estructura.</p>
+    </div>
+
+    <p>Usando únicamente el modelo reconstruido en la Fase 1, produzcan un primer borrador del corazón organizado por categorías. El propósito no es que el contenido sea correcto; el propósito es activar lo que ya saben y detectar dónde está el vacío real.</p>
+
+    <p><strong>Instrucción importante:</strong> al finalizar esta fase, fotografíen o digitalicen su borrador. Ese documento deberá incluirse sin modificaciones como Anexo en la entrega final del fin de semana. Es evidencia de tu estado de conocimiento antes de consultar fuentes.</p>
+
+    <!-- FASE 3 -->
+    <div class="fase-header" style="margin-top: 28px;">
+      <span class="fase-badge">Fase 3</span>
+      <h3>Identificación de vacíos</h3>
+      <span class="fase-tiempo">10 min</span>
+    </div>
+
+    <p>Revisen su borrador y marquen, categoría por categoría, qué pudieron completar y qué no saben o dudan. Usa el siguiente organizador para registrarlo:</p>
+
+    <div class="vacios-grid" id="vacios-container">
+      <!-- generado por JS -->
+    </div>
+
+    <div class="info-box ok" style="margin-top: 8px;">
+      <strong>Para qué sirve esto:</strong> tus vacíos marcados son las preguntas con las que debes ir a las fuentes durante el fin de semana. No es lectura pasiva; es búsqueda con propósito definido.
+    </div>
+
+    <!-- FASE 4 -->
+    <div class="fase-header" style="margin-top: 28px;">
+      <span class="fase-badge">Fase 4</span>
+      <h3>Instrucciones para el trabajo autónomo</h3>
+      <span class="fase-tiempo">5 min</span>
+    </div>
+
+    <p>Tu docente revisará contigo la siguiente sección antes de que salgas del aula.</p>
+  </section>
+
+  <!-- SECCIÓN 3: TRABAJO AUTÓNOMO -->
+  <section data-index="3" data-title="Trabajo autónomo" id="sec-3">
+    <div class="section-label">
+      <div class="section-num">3</div>
+      <h2>Trabajo autónomo — fin de semana</h2>
+    </div>
+
+    <div class="restriccion">
+      <div class="restriccion-icon">⚠</div>
+      <p>Regla central: no puedes reorganizar el contenido que investigues. Todo lo que encuentres en tus fuentes debe encajar en las categorías del modelo original. Si una fuente presenta la información en un orden distinto, es tu responsabilidad traducirla al modelo.</p>
+    </div>
+
+    <!-- PRODUCTO 1 -->
+    <div class="producto-card">
+      <div class="producto-header">
+        <span class="producto-num">Producto 1</span>
+        <h4>Modelo completo del corazón</h4>
+      </div>
+      <div class="producto-body">
+        <p>Desarrolla cada una de las siguientes categorías con el nivel de detalle que se indica. La estructura es obligatoria; el orden, también.</p>
+
+        <div class="subcats">
+          <div class="subcat">
+            <strong>A. Identidad macroscópica</strong><br>
+            Describe la forma tridimensional con precisión geométrica —no basta con escribir "órgano muscular hueco". Indica los ejes reales de orientación del corazón en el tórax.
+          </div>
+          <div class="subcat">
+            <strong>B. Localización y relaciones</strong><br>
+            Sitúa el corazón en el mediastino con el nombre completo de la región. Describe sus relaciones con los pulmones, el diafragma y los grandes vasos. No es suficiente nombrarlo; debes describir la relación espacial.
+          </div>
+          <div class="subcat">
+            <strong>C. Sistema de recubrimiento</strong><br>
+            Describe el pericardio fibroso y el pericardio seroso por separado, incluyendo el espacio pericárdico y su significado funcional. Al hacerlo, identifica en tu propio análisis si este sistema cumple una función análoga a la pleura —sin que eso te pida hacer una comparación explícita en el texto.
+          </div>
+          <div class="subcat">
+            <strong>D. Organización interna</strong><br>
+            Describe las cuatro cavidades, las válvulas asociadas a cada una y el trayecto del flujo sanguíneo como secuencia ordenada: desde qué cavidad entra, hacia dónde pasa, qué válvula lo regula y por qué en esa dirección y no en la contraria.
+          </div>
+          <div class="subcat">
+            <strong>E. Vascularización</strong><br>
+            Describe las arterias coronarias como sistema vascular <em>nutritivo</em> del miocardio. Explica, con tu propio razonamiento, por qué las coronarias y la circulación pulmonar son sistemas distintos aunque ambos involucren al corazón como órgano.
+          </div>
+          <div class="subcat">
+            <strong>F. Inervación</strong><br>
+            Describe la participación del sistema nervioso simpático y parasimpático, indicando el efecto funcional concreto de cada uno —no solo los nombres de los nervios.
+          </div>
+          <div class="subcat">
+            <strong>G. Integración funcional</strong><br>
+            Explica cómo la disposición estructural del corazón —cavidades, válvulas, pericardio— hace posible el flujo unidireccional de la sangre. La respuesta debe derivarse de la estructura, no ser una definición memorizada de función cardíaca.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTO 2 -->
+    <div class="producto-card">
+      <div class="producto-header">
+        <span class="producto-num">Producto 2</span>
+        <h4>Esquema funcional</h4>
+      </div>
+      <div class="producto-body">
+        <p>Produce un diagrama del corazón que represente el flujo sanguíneo, las cámaras y las relaciones básicas. El criterio de calidad de este esquema es funcional, no estético: debe ser posible trazar con el dedo el recorrido completo de la sangre a través del corazón.</p>
+        <div class="info-box warn" style="margin-top: 12px;">
+          <strong>Criterio de revisión:</strong> si tu esquema no permite trazar ese recorrido, no cumple su propósito, independientemente de su calidad gráfica. Si sí lo permite, cumple, independientemente de su nivel artístico.
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTO 3 -->
+    <div class="producto-card">
+      <div class="producto-header">
+        <span class="producto-num">Producto 3</span>
+        <h4>Análisis metacognitivo</h4>
+      </div>
+      <div class="producto-body">
+        <p>Extensión máxima: una página. Responde las siguientes cuatro preguntas con base en tu experiencia real durante la actividad, no en lo que creas que se espera leer.</p>
+
+        <div class="meta-pregunta">
+          <div class="meta-num">Pregunta 1</div>
+          <p>¿Qué categoría del modelo te resultó más fácil transferir del pulmón al corazón? ¿Por qué crees que esa categoría fue más accesible?</p>
+        </div>
+        <div class="meta-pregunta">
+          <div class="meta-num">Pregunta 2</div>
+          <p>¿En qué categoría fallaste aunque ya habías trabajado un tipo de estructura similar en el pulmón? Describe qué salió mal.</p>
+        </div>
+        <div class="meta-pregunta">
+          <div class="meta-num">Pregunta 3</div>
+          <p>¿Hubo algún momento en que dejaste de usar el modelo y empezaste a registrar información sin estructura? Si ocurrió, ¿en qué categoría fue y a qué atribuyes que pasó?</p>
+        </div>
+        <div class="meta-pregunta">
+          <div class="meta-num">Pregunta 4</div>
+          <p>Si tuvieras que estudiar otro órgano con este mismo método, ¿qué modificarías del modelo para que funcione mejor?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST DE ENTREGA -->
+    <div class="info-box" style="margin-top: 8px;">
+      <strong>Tu entrega debe incluir cuatro elementos:</strong> Producto 1 (modelo completo), Producto 2 (esquema funcional), Producto 3 (análisis metacognitivo) y el Anexo (fotografía o digitalización del borrador de Fase 2 sin modificaciones).
+    </div>
+
+    <p style="margin-top:16px;">Usa el siguiente verificador antes de entregar:</p>
+
+    <div id="checklist-container"></div>
+    <div id="checklist-status"></div>
+  </section>
+
+  <!-- SECCIÓN 4: CIERRE EN AULA -->
+  <section data-index="4" data-title="Cierre en aula" id="sec-4">
+    <div class="section-label">
+      <div class="section-num">4</div>
+      <h2>Cierre en aula — 20 a 30 minutos</h2>
+    </div>
+
+    <p>En la sesión siguiente se proyectará un modelo de referencia del corazón organizado con las mismas categorías. La revisión no cubrirá todo el contenido; se centrará en tres preguntas:</p>
+
+    <div class="subcats">
+      <div class="subcat">¿Quién respetó la estructura del modelo en su totalidad?</div>
+      <div class="subcat">¿En qué punto del trabajo autónomo se abandonó el modelo y por qué?</div>
+      <div class="subcat">¿Qué errores estructurales —no de contenido— se repiten entre los equipos?</div>
+    </div>
+
+    <p style="margin-top: 16px;">La retroalimentación será sobre estructura, no sobre qué tan completa está tu descripción del corazón. Un trabajo con datos correctos pero sin estructura no cumple el objetivo de la actividad.</p>
+  </section>
+
+  <!-- SECCIÓN 5: CRITERIOS -->
+  <section data-index="5" data-title="Criterios de evaluación" id="sec-5">
+    <div class="section-label">
+      <div class="section-num">5</div>
+      <h2>Criterios de evaluación formativa</h2>
+    </div>
+
+    <div class="info-box warn">
+      <strong>Esta actividad es formativa.</strong> La retroalimentación que recibirás no mide cuánto sabes del corazón, sino si eres capaz de usar un modelo de análisis de manera consistente y transferible.
+    </div>
+
+    <div style="margin-top: 16px;">
+      <div class="criterio-row">
+        <div>
+          <div class="criterio-nombre">Uso del modelo</div>
+          <div class="criterio-desc">Se respetaron las siete categorías en el orden correcto. Las categorías están completas, no reducidas a menciones superficiales.</div>
+        </div>
+        <div class="criterio-pct">40<span>%</span></div>
+      </div>
+      <div class="criterio-row">
+        <div>
+          <div class="criterio-nombre">Coherencia anatómica</div>
+          <div class="criterio-desc">Las relaciones espaciales son correctas. El flujo sanguíneo se describe como secuencia lógica, no como lista de estructuras.</div>
+        </div>
+        <div class="criterio-pct">30<span>%</span></div>
+      </div>
+      <div class="criterio-row">
+        <div>
+          <div class="criterio-nombre">Esquema funcional</div>
+          <div class="criterio-desc">El diagrama permite trazar el recorrido sanguíneo. No se evalúa la calidad gráfica sino la utilidad funcional.</div>
+        </div>
+        <div class="criterio-pct">15<span>%</span></div>
+      </div>
+      <div class="criterio-row">
+        <div>
+          <div class="criterio-nombre">Análisis metacognitivo</div>
+          <div class="criterio-desc">Las respuestas identifican errores reales, no respuestas genéricas. La Pregunta 3 es contingente: si no hubo abandono del modelo, debe decirse explícitamente.</div>
+        </div>
+        <div class="criterio-pct">15<span>%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 6: ERRORES FRECUENTES -->
+  <section data-index="6" data-title="Errores frecuentes" id="sec-6">
+    <div class="section-label">
+      <div class="section-num">6</div>
+      <h2>Errores frecuentes — léelos antes de entregar</h2>
+    </div>
+
+    <p>Los siguientes errores se han identificado con frecuencia en actividades similares. No son advertencias genéricas; son los problemas específicos que hacen que un trabajo con contenido correcto no cumpla el objetivo de la actividad.</p>
+
+    <div class="modelo-grid">
+      <div class="cat" style="background: var(--color-error);">Error 1</div>
+      <div class="desc"><strong>Descripción tipo lista sin estructura.</strong> Enumerar estructuras del corazón sin organizarlas en categorías del modelo. "El corazón tiene cuatro cavidades, dos aurículas y dos ventrículos" no es una respuesta a la categoría D; es el inicio de una que no llega a ninguna parte si no incluye flujo y válvulas.</div>
+      <div class="cat" style="background: var(--color-error);">Error 2</div>
+      <div class="desc"><strong>Confundir vascularización funcional con nutritiva.</strong> Las coronarias nutren el miocardio; no son parte de la circulación pulmonar. Confundirlos implica no haber entendido la categoría E.</div>
+      <div class="cat" style="background: var(--color-error);">Error 3</div>
+      <div class="desc"><strong>Pericardio y pleura tratados como lo mismo.</strong> Cumplen funciones análogas pero son estructuras distintas con organización diferente. Mencionarlas como equivalentes sin distinguirlas es un error de análisis.</div>
+      <div class="cat" style="background: var(--color-error);">Error 4</div>
+      <div class="desc"><strong>Esquema decorativo pero inútil.</strong> Un diagrama anatómicamente detallado que no permite seguir el flujo sanguíneo no cumple el Producto 2.</div>
+      <div class="cat" style="background: var(--color-error);">Error 5</div>
+      <div class="desc"><strong>Copia textual de fuentes.</strong> Si el texto de tu Producto 1 suena como un libro de anatomía, probablemente lo es. El modelo exige que proceses la información y la organices en tus categorías, con tus palabras.</div>
+    </div>
+  </section>
+
+</div><!-- /page-content -->
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <div><strong>Anatomía</strong> · Actividad: Transferencia de modelo anatómico</div>
+  <div>Daniel Angulo Conde · daniel.angulo@upaep.mx · UPAEP 2025–2026</div>
+</div>
+
+<script>
+// ── DATOS ──
+var categorias = [
+  { id: 'forma',     name: 'Forma / Ejes',           desc: 'Descripción tridimensional, no adjetivos genéricos' },
+  { id: 'local',     name: 'Localización / Relaciones', desc: 'Posición y estructuras adyacentes' },
+  { id: 'recub',     name: 'Sistema de recubrimiento', desc: 'Pericardio fibroso, seroso, espacio' },
+  { id: 'org',       name: 'Organización interna',    desc: 'Cavidades, válvulas, flujo como secuencia' },
+  { id: 'vasc',      name: 'Vascularización',         desc: 'Coronarias vs. circulación pulmonar' },
+  { id: 'inerv',     name: 'Inervación',              desc: 'Simpático y parasimpático con efecto funcional' },
+  { id: 'integ',     name: 'Integración funcional',   desc: 'Cómo la estructura permite el flujo unidireccional' }
+];
+
+var checklistItems = [
+  { id: 'cl-modelo',   label: 'Producto 1 completo',   desc: 'Las siete categorías desarrolladas en el orden del modelo' },
+  { id: 'cl-esquema',  label: 'Producto 2 completo',   desc: 'Esquema que permite trazar el recorrido sanguíneo con el dedo' },
+  { id: 'cl-meta',     label: 'Producto 3 completo',   desc: 'Las cuatro preguntas respondidas con base en experiencia real' },
+  { id: 'cl-anexo',    label: 'Anexo incluido',        desc: 'Fotografía o digitalización del borrador de Fase 2 sin modificar' }
+];
+
+// ── VACÍOS ──
+(function() {
+  var container = document.getElementById('vacios-container');
+  if (!container) return;
+  categorias.forEach(function(cat) {
+    var div = document.createElement('div');
+    div.className = 'vacio-item';
+    div.innerHTML = '<div class="cat-name">' + cat.name + '</div>'
+      + '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">' + cat.desc + '</div>'
+      + '<div class="vacio-toggle">'
+      + '<button class="vacio-btn" data-cat="' + cat.id + '" data-val="ok">✓ Lo tengo</button>'
+      + '<button class="vacio-btn" data-cat="' + cat.id + '" data-val="duda">? Dudo</button>'
+      + '<button class="vacio-btn" data-cat="' + cat.id + '" data-val="no">✗ Vacío</button>'
+      + '</div>';
+    container.appendChild(div);
+  });
+
+  container.addEventListener('click', function(e) {
+    var btn = e.target.closest('.vacio-btn');
+    if (!btn) return;
+    var cat = btn.getAttribute('data-cat');
+    var val = btn.getAttribute('data-val');
+    var siblings = container.querySelectorAll('[data-cat="' + cat + '"]');
+    siblings.forEach(function(s) {
+      s.classList.remove('active-ok', 'active-duda', 'active-no');
+    });
+    btn.classList.add('active-' + val);
+  });
+})();
+
+// ── CHECKLIST ──
+(function() {
+  var container = document.getElementById('checklist-container');
+  var status = document.getElementById('checklist-status');
+  if (!container) return;
+
+  checklistItems.forEach(function(item) {
+    var div = document.createElement('div');
+    div.className = 'checklist-item';
+    div.setAttribute('id', item.id + '-item');
+    div.innerHTML = '<div class="check-icon" id="' + item.id + '-icon">○</div>'
+      + '<div class="checklist-label">'
+      + '<strong>' + item.label + '</strong>'
+      + item.desc
+      + '</div>';
+    container.appendChild(div);
+  });
+
+  container.addEventListener('click', function(e) {
+    var item = e.target.closest('.checklist-item');
+    if (!item) return;
+    var icon = item.querySelector('.check-icon');
+    var checked = item.classList.contains('checked');
+    if (checked) {
+      item.classList.remove('checked');
+      icon.textContent = '○';
+    } else {
+      item.classList.add('checked');
+      icon.textContent = '✓';
+    }
+    var total = container.querySelectorAll('.checklist-item').length;
+    var done = container.querySelectorAll('.checklist-item.checked').length;
+    status.style.display = 'block';
+    if (done === total) {
+      status.style.background = 'var(--color-ok-bg)';
+      status.style.color = 'var(--color-ok-text)';
+      status.style.border = '1.5px solid var(--color-ok)';
+      status.style.borderRadius = 'var(--radius)';
+      status.style.padding = '10px 14px';
+      status.textContent = '✓ Entrega completa. Todos los elementos están listos.';
+    } else {
+      status.style.background = 'var(--color-warn-bg)';
+      status.style.color = 'var(--color-warn-text)';
+      status.style.border = '1.5px solid var(--color-warn)';
+      status.style.borderRadius = 'var(--radius)';
+      status.style.padding = '10px 14px';
+      status.textContent = done + ' de ' + total + ' elementos listos. Verifica los que faltan antes de entregar.';
+    }
+  });
+})();
+
+// ── BARRA DE PROGRESO ──
+(function() {
+  var sections = document.querySelectorAll('section[data-index]');
+  var bar = document.getElementById('progress-bar');
+  var label = document.getElementById('progress-label');
+  var total = sections.length;
+
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+    bar.style.width = pct + '%';
+    var current = 1;
+    sections.forEach(function(s) {
+      if (s.getBoundingClientRect().top <= 120) current = parseInt(s.getAttribute('data-index'));
+    });
+    label.textContent = 'Sección ' + current + ' de ' + total;
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+})();
+
+// ── PROYECTOR ──
+(function() {
+  var btn = document.getElementById('projector-btn');
+  var on = false;
+  btn.addEventListener('click', function() {
+    on = !on;
+    document.body.style.fontSize = on ? '19px' : '';
+    document.body.style.lineHeight = on ? '1.9' : '';
+    btn.textContent = on ? '✕ Normal' : '⊞ Proyector';
+    btn.style.background = on ? 'var(--color-error)' : 'var(--upaep-blue)';
+  });
+})();
+
+// ── ÍNDICE LATERAL ──
+(function() {
+  var toggle = document.getElementById('sidebar-toggle');
+  var content = document.getElementById('sidebar-content');
+  var sections = document.querySelectorAll('section[data-index]');
+  var html = '<div style="font-size:12px;font-weight:700;color:var(--upaep-blue);margin-bottom:8px;">CONTENIDO</div>';
+  sections.forEach(function(s) {
+    var idx = s.getAttribute('data-index');
+    var title = s.getAttribute('data-title') || 'Sección ' + idx;
+    html += '<a href="#sec-' + idx + '" style="display:block;font-size:12px;color:var(--text-main);padding:5px 0;text-decoration:none;border-bottom:.5px solid var(--gray-border);">' + idx + '. ' + title + '</a>';
+  });
+  content.innerHTML = html;
+  toggle.addEventListener('click', function() {
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+  });
+})();
+</script>
+</body>
+</html>
